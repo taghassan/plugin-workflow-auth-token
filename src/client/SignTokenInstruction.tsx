@@ -10,11 +10,7 @@
 import React from 'react';
 import { KeyOutlined } from '@ant-design/icons';
 import { RemoteSelect } from '@nocobase/client';
-import {
-  Instruction,
-  WorkflowVariableInput,
-  WorkflowVariableWrapper,
-} from '@nocobase/plugin-workflow/client';
+import { Instruction, WorkflowVariableInput, WorkflowVariableWrapper } from '@nocobase/plugin-workflow/client';
 
 const NAMESPACE = 'workflow-auth-token';
 
@@ -111,4 +107,6 @@ export default class extends Instruction {
     WorkflowVariableWrapper,
     RemoteSelect,
   };
+
+  testable = true;
 }

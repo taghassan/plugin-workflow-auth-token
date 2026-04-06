@@ -61,4 +61,42 @@ export default class SignTokenInstruction extends Instruction {
       };
     }
   }
+
+  async test(config) {
+    const { userId, roleName, expiresIn = '1d' } = config;
+
+    if (!userId) {
+      return { result: { error: 'userId is required' }, status: JOB_STATUS.ERROR };
+    }
+
+    try {
+      const app = this.workflow.app;
+      const userRepo = app.db.getRepository('users');
+      const user = await userRepo.findOne({ filterByTk: userId });
+      if (!user) {
+        return { result: { error: `User ${userId} not found` }, status: JOB_STATUS.ERROR };
+      }
+
+      if (roleName) {
+        const rolesRepo = app.db.getRepository('users.roles', userId);
+        const role = await rolesRepo.findOne({ filter: { name: roleName } });
+        if (!role) {
+          return { result: { error: `User ${userId} does not have role "${roleName}"` }, status: JOB_STATUS.ERROR };
+        }
+      }
+
+      const payload: any = { userId: user.id };
+      if (roleName) {
+        payload.roleName = roleName;
+      }
+      const token = app.authManager.jwt.sign(payload, { expiresIn });
+
+      return {
+        result: { token, userId: user.id, roleName: roleName || null, expiresIn },
+        status: JOB_STATUS.RESOLVED,
+      };
+    } catch (err) {
+      return { result: { error: err.message }, status: JOB_STATUS.ERROR };
+    }
+  }
 }
