@@ -10,7 +10,7 @@
 import React from 'react';
 import { KeyOutlined } from '@ant-design/icons';
 import { RemoteSelect } from '@nocobase/client';
-import { Instruction, WorkflowVariableInput, WorkflowVariableWrapper } from '@nocobase/plugin-workflow/client';
+import { Instruction, WorkflowVariableInput, WorkflowVariableWrapper, defaultFieldNames } from '@nocobase/plugin-workflow/client';
 
 const NAMESPACE = 'workflow-auth-token';
 
@@ -107,6 +107,19 @@ export default class extends Instruction {
     WorkflowVariableWrapper,
     RemoteSelect,
   };
+
+  useVariables({ key, title }) {
+    return {
+      [defaultFieldNames.value]: key,
+      [defaultFieldNames.label]: title,
+      [defaultFieldNames.children]: [
+        { [defaultFieldNames.value]: 'token', [defaultFieldNames.label]: 'Token' },
+        { [defaultFieldNames.value]: 'userId', [defaultFieldNames.label]: 'User ID' },
+        { [defaultFieldNames.value]: 'roleName', [defaultFieldNames.label]: 'Role' },
+        { [defaultFieldNames.value]: 'expiresIn', [defaultFieldNames.label]: 'Expires in' },
+      ],
+    };
+  }
 
   testable = true;
 }
