@@ -59,7 +59,7 @@ export default class SignTokenInstruction extends Instruction {
       if (roleName) {
         payload.roleName = roleName;
       }
-      const token = app.authManager.jwt.sign(payload, { expiresIn });
+      const token = app.authManager.jwt.sign(payload, { expiresIn: expiresIn as any });
 
       // Register in apiKeys table — same as API Keys plugin.
       // Without this, auth:signOut will jwt.block() the token permanently
